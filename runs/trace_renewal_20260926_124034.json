@@ -1,0 +1,38 @@
+{
+  "request": "Email from Acme Cloud Services: 'Your contract ends on 31 October 2026. We would like to renew for another 12 months with a 12% price increase due to rising infrastructure costs. Please confirm.'",
+  "outcome": "crashed: BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-10-01 at 00:00 UTC.'}, 'request_id': 'req_011CfRdgsLeVZRWtL8Xrhq9V'}",
+  "agent_calls": 1,
+  "api_calls": 0,
+  "chaos_mode": "off",
+  "total_tokens": 0,
+  "cost_usd": 0.0,
+  "cost_rs": 0.0,
+  "budget_rs": 3.0,
+  "time_limit_s": 300,
+  "seconds_system": 2,
+  "seconds_waiting_for_human": 0,
+  "warnings": [],
+  "trace": [
+    {
+      "time": "12:40:33",
+      "actor": "system",
+      "action": "BUDGETS",
+      "why": "",
+      "detail": "cost Rs 3.0, time 300s, 14 agent calls, 120s per call"
+    },
+    {
+      "time": "12:40:33",
+      "actor": "intake",
+      "action": "REQUEST RECEIVED",
+      "why": "",
+      "detail": "Email from Acme Cloud Services: 'Your contract ends on 31 October 2026. We would like to renew for another 12 months with a 12% price increase due to rising infrastructure costs. Please confirm.'"
+    },
+    {
+      "time": "12:40:34",
+      "actor": "system",
+      "action": "ERROR",
+      "why": "",
+      "detail": "crashed: BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-10-01 at 00:00 UTC.'}, 'request_id': 'req_011CfRdgsLeVZRWtL8Xrhq9V'}"
+    }
+  ]
+}

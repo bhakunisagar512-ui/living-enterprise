@@ -1,0 +1,13 @@
+ACME CLOUD SERVICES - SPEND AND PERFORMANCE (Nov 2025 to Sep 2026)
+
+Monthly fee: Rs 2,00,000
+Total paid so far: Rs 22,00,000
+
+Monthly uptime:
+Nov 99.95% | Dec 99.92% | Jan 99.97% | Feb 99.91% | Mar 99.93%
+Apr 99.94% | May 99.42% | Jun 99.96% | Jul 99.61% | Aug 99.95% | Sep 99.93%
+
+Service credits claimed so far: None
+Major incidents: 3 (two in May, one in July)
+
+Market check: Two competitor quotes were received in US dollars (see quotes.txt). Convert them at the current exchange rate before comparing.

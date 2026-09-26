@@ -1,0 +1,23 @@
+Dear Acme Cloud Services team,
+
+Thank you for your email regarding the renewal of our Master Services Agreement, currently due to end on 31 October 2026.
+
+For reference, the current terms are:
+- Annual fee: Rs 24,00,000 (monthly fee: Rs 2,00,000)
+- Renewal mechanism: Clause 8.1, renewable for a further 12 months by mutual written agreement
+- Price increase cap: Clause 8.2, renewal price increases are capped at 7% unless both parties agree otherwise in writing
+
+Before we proceed with any renewal discussion, we need to address outstanding service credits under Clause 4.2. Our records show that monthly uptime fell below the 99.9% SLA target (Clause 4.1) in May and July of this contract year, entitling us to a 5% service credit for each of those months. This amounts to a total of Rs 20,000 in unclaimed service credits. We request that this amount be formally applied and offset against the renewal invoice.
+
+Regarding the proposed 12% price increase: under our contract's Clause 8.2, renewal increases are capped at 7% absent mutual written agreement otherwise, and under our internal procurement policy, increases above 10% cannot be accepted as proposed and must instead be negotiated down or opened to competitive bidding. A 12% increase therefore falls outside what we are able to approve at this stage.
+
+We would like to propose the following counter-offer for your consideration:
+- A price increase of no more than 7%, consistent with Clause 8.2, bringing the annual fee to approximately Rs 25,68,000 (monthly Rs 2,14,000), OR
+- Alternatively, should you be able to provide written justification for the rising infrastructure costs cited, we would be willing to escalate a proposal of up to 10% internally for approval, per our procurement policy.
+
+We would also note that we have received comparable market offers with 12-month terms and uptime SLAs at or near our current standard, which we may need to factor into our final decision if a mutually acceptable rate cannot be reached.
+
+We value our ongoing partnership with Acme Cloud Services and would like to resolve this renewal promptly. Please confirm the SLA credit application and let us know your position on the counter-offer above at your earliest convenience. Any final agreement remains subject to internal approval on our side.
+
+Kind regards,
+Nimbus Retail Procurement
