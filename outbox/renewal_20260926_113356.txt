@@ -1,0 +1,41 @@
+Subject: RE: Contract Renewal – Acme Cloud Services (Ends 31 October 2026)
+
+Dear Acme Cloud Services Team,
+
+Thank you for your recent email regarding contract renewal. We confirm the contract end date of 31 October 2026 and our interest in continuing this partnership.
+
+**Contract Renewal Terms**
+
+We acknowledge your request to renew for 12 months. However, we must address the proposed 12% price increase.
+
+Our current annual fee is Rs 24,00,000 (Rs 2,00,000 monthly). Your proposed 12% increase would bring the renewed annual fee to Rs 26,88,000. This increase exceeds both our internal procurement policy limits and the contractual framework:
+
+- **Contract Clause 8.2** caps renewal price increases at 7% unless both parties agree otherwise in writing.
+- Our procurement policy does not permit increases above 10% without competitive re-evaluation.
+
+Given that market analysis shows comparable services available at 3% to 4% below your current pricing, we cannot accept a 12% increase.
+
+**Counter-Offer**
+
+We propose renewing at a 7% increase, in line with **Contract Clause 8.2**. This would establish a renewed annual fee of Rs 25,68,000 (Rs 2,14,000 monthly). We believe this reflects fair recognition of infrastructure cost pressures while maintaining competitive market alignment.
+
+**Outstanding Service Credits**
+
+Before finalizing renewal, we must address accrued service credits. Our records show two months with SLA performance below the 99.9% target under **Contract Clause 4.1**:
+- May 2026: 99.42% uptime
+- July 2026: 99.61% uptime
+
+Per **Contract Clause 4.2**, the service credit rate of 5% per missed month entitles us to Rs 20,000 in total credits (Rs 10,000 per month). These credits remain unclaimed and must be resolved before executing the renewed agreement.
+
+**Next Steps**
+
+Please confirm your acceptance of:
+1. A 7% renewal increase (Rs 25,68,000 annual fee) as per Contract Clause 8.2
+2. Resolution of the Rs 20,000 service credits owed under Contract Clause 4.2
+
+We are prepared to execute the renewal agreement promptly upon your confirmation of these terms.
+
+Regards,
+
+Nimbus Retail Procurement
+Nimbus Retail Ltd

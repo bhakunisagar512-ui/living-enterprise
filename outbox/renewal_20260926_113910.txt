@@ -1,0 +1,20 @@
+Dear Acme Cloud Services Team,
+
+Thank you for your email regarding the renewal of our services agreement, which is due to end on 31 October 2026. We confirm our interest in renewing for a further 12-month term under Clause 8.1 of our contract, which permits renewal by mutual written agreement.
+
+However, we are unable to accept the proposed 12% price increase as presented. Under Clause 8.2 of the contract, any price increase is capped at 7% unless both parties agree otherwise in writing. A 12% increase exceeds this cap and is not acceptable in its current form. As this proposed increase falls outside our standard approval thresholds, our proposed counter below is subject to internal Finance Director approval before it can be finalized on our side. We will confirm formally once that approval is obtained.
+
+In addition, as this increase is above what our standard terms permit, we would ask that you provide written justification for the 12% increase, detailing the specific rising infrastructure costs driving this request, so that it can be properly evaluated on our end.
+
+Separately, we would like to bring to your attention that Acme did not meet the contractual uptime SLA of 99.9% (Clause 4.1) in two months during the current term: May 2026 (99.42%) and July 2026 (99.61%). Per Clause 4.2, this entitles Nimbus Retail to service credits of 5% of that month's fee for each shortfall month. Based on the monthly fee of Rs 2,00,000, this amounts to Rs 10,000 per affected month, for a total of Rs 20,000 owed to us. Our records show no credits have been claimed to date, and we are formally claiming this Rs 20,000 in service credits now.
+
+Taking the above into account, we propose the following counter-offer for the renewal term, pending our internal approval process:
+1. A price increase capped at 7%, in line with Clause 8.2, rather than the requested 12%; and
+2. Application of the Rs 20,000 in outstanding service credits (per Clause 4.2) against the renewed contract's first invoice.
+
+We would also note that current market quotes from other providers for comparable services are running 3-4% below Acme's current pricing, which further supports keeping any increase at or below the contractual cap.
+
+Please provide the written justification requested above at your earliest convenience. We will follow up shortly with final confirmation of our proposed terms once internal approval is complete.
+
+Kind regards,
+Nimbus Retail Procurement

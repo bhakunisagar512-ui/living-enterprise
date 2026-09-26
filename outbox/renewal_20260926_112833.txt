@@ -1,0 +1,39 @@
+Subject: Re: Contract Renewal – Response to Proposed 12% Price Increase
+
+Dear Acme Cloud Services,
+
+Thank you for your renewal proposal for a 12-month contract extension.
+
+We acknowledge your request to renew our cloud services agreement with a 12% price increase citing rising infrastructure costs. However, we must respectfully decline this proposal and offer a counter-offer based on our contractual terms and current market conditions.
+
+**Contractual Position:**
+
+Our existing contract (Clause 8.2) stipulates that renewal price increases are capped at 7% unless both parties agree otherwise in writing. Your proposed 12% increase exceeds this contractual cap and cannot be accepted without formal written amendment, which our procurement policy does not permit for increases of this magnitude.
+
+**Service Performance Credits:**
+
+During the performance period November 2025 through September 2026, your service fell below our agreed SLA target of 99.9% monthly uptime (Clause 4.1) in two months:
+- May 2026: 99.42% uptime
+- July 2026: 99.61% uptime
+
+Per Clause 4.2, Nimbus Retail is entitled to service credits of 5% on the monthly fee for each month below target. This amounts to Rs 20,000 in unclaimed credits (Rs 10,000 per missed month × 2 months). Before renewal discussions proceed, we require these credits be applied to our account.
+
+**Counter-Offer:**
+
+Nimbus Retail proposes renewal on the following terms:
+
+1. **Price Increase:** 7% on the current annual fee of Rs 24,00,000, in line with Clause 8.2 of our existing contract. This results in a new annual fee of Rs 25,68,000 (Rs 2,14,000 monthly).
+
+2. **Service Credits:** Application of Rs 20,000 in earned SLA credits against the first billing cycle of the renewed term.
+
+3. **Renewal Period:** 12 months, as requested.
+
+Additionally, we have received competitive quotes for equivalent service at 3% to 4% below your current pricing. We value our partnership with Acme Cloud Services, but we must ensure our renewal terms remain commercially competitive and compliant with our contractual framework.
+
+Please confirm your acceptance of this counter-offer to allow adequate time for contract execution before the current term expires on 31 October 2026.
+
+We look forward to your response.
+
+Best regards,
+
+**Nimbus Retail Procurement**
