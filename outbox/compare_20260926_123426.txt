@@ -1,0 +1,24 @@
+Subject: Acme Price Increase Request – Competitiveness Analysis
+
+To: CFO
+
+Per your request, here is the competitiveness analysis of Acme's proposed 12% price increase against the competitor quotes on file.
+
+Price Comparison (Rs per month):
+
+| Vendor | Price | At +7% | At +12% |
+|--------|-------|--------|---------|
+| Acme | 2,00,000 | 2,14,000 | 2,24,000 |
+| Zenith Cloud (Q-01) | 2,10,804 (indicative) | — | — |
+| Orbit Hosting (Q-02) | 2,15,595 (indicative) | — | — |
+
+Findings:
+- At its current price of Rs 2,00,000/month, Acme is competitive against both Zenith Cloud (Rs 2,10,804, indicative) and Orbit Hosting (Rs 2,15,595, indicative).
+- At a 7% increase (Rs 2,14,000/month), Acme is cheaper than Orbit Hosting (Rs 2,15,595, indicative) but more expensive than Zenith Cloud (Rs 2,10,804, indicative). It does not undercut both competitors at this level.
+- At a 12% increase (Rs 2,24,000/month), Acme becomes the most expensive option in the market, exceeding both Zenith (Rs 2,10,804, indicative) and Orbit (Rs 2,15,595, indicative) quotes.
+
+Recommendation:
+We recommend rejecting the 12% increase as it is not competitively justified. We suggest countering with an offer capped at 7%. At this level, Acme remains below Orbit Hosting's quoted rate, though it would sit slightly above Zenith Cloud's quoted rate (indicative), so a 7% increase should still be treated as a stretch position rather than a clear market-beating price. If Acme is unwilling to hold at or near 7%, we should use the Zenith and Orbit quotes as leverage in negotiation before considering the 12% ask.
+
+Regards,
+Nimbus Retail Procurement

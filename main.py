@@ -27,6 +27,18 @@ from crewai import Agent, Crew, LLM, Process, Task
 from crewai.tools import tool
 from pydantic import BaseModel, Field, ValidationError
 
+
+def quiet_crewai():
+    """Turns off CrewAI's cloud-tracing prompt ('Would you like to view your execution traces?').
+    It can appear mid-run and swallow a keypress meant for our own human-review screens.
+    We keep our own trace in runs/, so we record 'declined' using CrewAI's own settings."""
+    try:
+        from crewai.events.listeners.tracing import utils as tracing
+        tracing.mark_first_execution_done(user_consented=False)
+        tracing.set_suppress_tracing_messages(True)
+    except Exception:
+        pass   # a different CrewAI version: the prompt may appear, but the run still works
+
 BASE = Path(__file__).parent
 DATA_DIR = BASE / "data"
 RUNS_DIR = BASE / "runs"
@@ -841,6 +853,7 @@ def release(run: Run, text: str) -> Path:
 # ================================================================
 def main():
     global CURRENT_RUN, CHAOS
+    quiet_crewai()
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     flags = [a for a in sys.argv[1:] if a.startswith("--")]
     label = args[0] if args else "renewal"
