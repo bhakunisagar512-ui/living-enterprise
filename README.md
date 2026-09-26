@@ -6,6 +6,18 @@ Built solo for **Escape Velocity 1.0 — AI Hackathon**, problem statement **P-0
 
 > Four AI agents take a real business request from intake to a ready-to-send reply. They plan their own work, call a live external API, check each other's output, recover when a step fails, stay inside a cost and time budget, and stop to ask a human whenever it matters. Every step is written to an audit trace, and the whole run can be watched and controlled from a web page.
 
+![Final Review: every Validator check, the approvals only a person can give, and the message, before anything is sent](docs/screenshots/02_final_review_checks.png)
+
+### Results at a glance (real runs with Claude)
+
+| | |
+|---|---|
+| **Reliability** | **5 / 5 runs completed, 5 / 5 answers correct** (checked automatically against known answers) |
+| **Cost per request** | **about Rs 6 (≈ $0.07)**, measured from real token usage |
+| **Time per request** | **about 50 seconds** of system time |
+| **Recovery** | All exchange-rate APIs down → 4 failure types caught → saved rate used, figures marked *indicative* → approved |
+| **Human in charge** | Nothing is sent without a person ticking the required approvals and pressing Approve |
+
 ---
 
 ## The problem
@@ -183,6 +195,46 @@ Every run writes `runs/trace_<request>_<time>.json`, including runs that were st
 
 ---
 
+## Reliability: measured, not assumed
+
+`reliability.py` runs the same request several times and checks every answer against the known correct result (7% counter-offer, Rs 20,000 SLA credit, May and July named; never Rs 40,000, never accepting 12%). For this test only, a scripted reviewer approves at Final Review and aborts any escalation.
+
+```bash
+python reliability.py renewal 5
+```
+
+Each round found something real, which was fixed before the next:
+
+| Round | Completed | Correct | What the test revealed → what we fixed |
+|---|---|---|---|
+| 1 | 3 / 5 | 3 / 5 | **A cost-tracking bug:** CrewAI reports a model's *running total* of tokens, so costs were counted many times over. Fixed by measuring each call's own usage. Also **false "missing document" alarms**; the rule was tightened. |
+| 2 | 4 / 5 | 3 / 5 | The Validator's JSON was parsed **too strictly** (e.g. `"N/A"`), and one letter **didn't name the months**. Fixed with tolerant-but-safe parsing (anything doubtful counts as FAIL) and a rule to name the specifics behind every figure. |
+| 3 | **5 / 5** | **5 / 5** | Stable cost of about Rs 6 per run. One run shows the loop working: the Validator rejected a draft with an unexplained figure, the Executor fixed it, and the fix was approved. |
+
+| Request (final version) | Result | Cost | Time |
+|---|---|---|---|
+| Renewal × 5 | 5 / 5 completed and correct, 4 approved on the first draft | avg Rs 6.30 | avg 51 s |
+| Dispute | Duplicate invoice INV-2609-07 found; approved on the first draft | Rs 3.79 | 30 s |
+| Question | 2 months (May, July), Rs 20,000; an internal answer for the CFO | Rs 3.75 | 29 s |
+| Compare (live API) | 1 USD = 95.82 INR; one API call, rate reused | Rs 4.10 | 31 s |
+| Compare, **all APIs down** | 4 failures caught → saved rate, figures marked *indicative* | Rs 4.39 | 35 s |
+| Unknown vendor | 🚩 stopped **before** drafting: no contract on file | ≈ Rs 2 | — |
+
+---
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Dispute run completed](docs/screenshots/01_dispute_completed.png) | ![Plan and audit trail](docs/screenshots/04_plan_and_audit_trail.png) |
+| **A completed run:** agents, cost / time / call meters, outcome | **The plan** (each step with its reason) and the **audit trail** |
+| ![Chaos audit trail](docs/screenshots/07_chaos_audit_trail.png) | ![Chaos warning and internal note](docs/screenshots/06_chaos_warning_and_note.png) |
+| **All APIs down:** HTTP 500, timeout, garbage HTML and an impossible rate, all caught, then the saved-rate fallback | **Honest about it:** a warning, an internal note, and a required re-verification before external use |
+| ![Final review message](docs/screenshots/03_final_review_message.png) | ![Chaos final review checks](docs/screenshots/05_chaos_final_review_checks.png) |
+| **The exact output** and the three human choices | **The Validator enforces** that figures from an unverified rate are called *indicative* |
+
+---
+
 ## Evidence from real runs
 
 These happened in real runs with Claude during development:
@@ -198,21 +250,24 @@ These happened in real runs with Claude during development:
 | Stage 3 | Live API: `1 USD = 95.82 INR (rates dated 2026-09-25, 134 ms)`, and the competitor comparison changed accordingly | A real external tool changing a real answer |
 | Stage 3 | Chaos mode: HTTP 500, timeout, garbage HTML and an impossible rate were all rejected; the saved rate was used and every figure marked *indicative*. In the same run the Validator caught a false claim that a 7% price "undercuts both competitors" | Recovery at two layers in one run |
 | Stage 4 | A **real** failure: the Anthropic account hit its spend limit mid-development. The run stopped and the trace was saved; the error is now reported in plain English | Real-world failure, handled |
-| Stage 4 | Budget Rs 3: ⚠ at 80% (Rs 2.52), 🚩 at Rs 4.86 **before** the next AI call; a full run costs about Rs 7–15 | Measured cost, enforced budget |
+| Stage 4 | Budget Rs 3: ⚠ at 80%, then 🚩 **before** the next AI call, and the human chose to raise it | An enforced budget |
+| Stage 6 | The reliability test exposed that CrewAI reports **cumulative** token usage; every cost had been over-counted. Fixed; costs are now stable at about Rs 6 per request | Testing that finds real bugs |
 
 ---
 
 ## Running it
 
-**Requirements:** Python 3.10+ and an Anthropic API key.
+**Requirements:** Python 3.10+, Git, and your own Anthropic API key (from [console.anthropic.com](https://console.anthropic.com)). Each run costs about Rs 3–9 on your key.
 
 ```bash
+git clone https://github.com/bhakunisagar512-ui/living-enterprise.git
+cd living-enterprise
 pip install -r requirements.txt
 
 # Windows
-setx ANTHROPIC_API_KEY "sk-ant-..."      # then open a new terminal
+setx ANTHROPIC_API_KEY "your-key-here"      # then open a new terminal
 # macOS / Linux
-export ANTHROPIC_API_KEY="sk-ant-..."
+export ANTHROPIC_API_KEY="your-key-here"
 ```
 
 **Web UI (recommended):**
@@ -236,11 +291,13 @@ python main.py compare --chaos-partial   # primary currency API fails
 python main.py renewal --budget 3        # hits the cost budget mid-run
 python main.py renewal --time-limit 30   # hits the time budget
 python main.py renewal --agent-timeout 5 # AI calls time out and are retried
+
+python reliability.py renewal 5          # 5 runs, completion and correctness report
 ```
 
 Run `compare` once without chaos first, so a last known good rate is cached for the chaos demo.
 
-A typical run uses 4–7 agent calls, about 20,000–55,000 tokens, **Rs 7–15**, and 30–90 seconds of system time.
+A typical run uses 4–6 agent calls, about 15,000–30,000 tokens, **Rs 3–9**, and 25–60 seconds of system time.
 
 ---
 
@@ -251,6 +308,7 @@ A typical run uses 4–7 agent calls, about 20,000–55,000 tokens, **Rs 7–15*
 ├── main.py                  the system: agents, tools, recovery, budgets (latest stage)
 ├── app.py                   web server for the UI
 ├── static/index.html        the web UI (plain HTML/CSS/JS)
+├── reliability.py           repeated-run test: completion and correctness
 ├── data/                    company documents the agents read
 │   ├── contract.txt         Acme master services agreement
 │   ├── policy.txt           procurement policy (Rules 1-5)
@@ -263,9 +321,9 @@ A typical run uses 4–7 agent calls, about 20,000–55,000 tokens, **Rs 7–15*
 │   ├── stage-3/
 │   ├── stage-4/
 │   └── stage-5/
-├── docs/                    design document (PDF)
-├── runs/                    trace files (created when you run it)
-├── outbox/                  approved outputs (created when you run it)
+├── docs/                    design document (PDF) and screenshots
+├── runs/                    trace files from real runs (new runs add more)
+├── outbox/                  approved outputs from real runs
 └── requirements.txt
 ```
 
@@ -282,10 +340,25 @@ The project was built in stages, each tested with real Claude runs before moving
 | **3 · Real API + recovery** | Live currency API · backup API · cached fallback · response validation · chaos mode · parallel-safe rate sharing | Survives failed, slow and malformed API responses |
 | **4 · Budgets** | Cost budget in rupees from real token usage · time budget · 80% warnings · per-call AI timeout · AI provider error handling | Every stopping condition P-03 lists, enforced before money is spent |
 | **5 · Web UI** | FastAPI + plain HTML/CSS/JS · live event stream · escalation and Final Review in the browser · required-approval tick-boxes · past-run viewer | The whole system can be watched and controlled from one page |
+| **6 · Proof** (current `main.py`) | Reliability test with automatic correctness checks · per-call cost measurement fix · tolerant-but-safe Validator parsing · every request tested live, including chaos | **5 / 5 completed, 5 / 5 correct, about Rs 6 per request** |
 
 ### Planned next
 
-- **Stage 6:** a 5-run reliability test (completion rate), demo script, pitch
+- **Stage 7:** code split into modules with unit tests; stronger prompt-injection defences; pinned dependencies
+- **Stage 8:** optional online hosting with an access code and rate limits
+
+---
+
+## Security
+
+- **No secrets in the repo.** The API key is read from an environment variable only; `.gitignore` excludes `.env` files.
+- **Local by default.** The web server listens on `127.0.0.1` only, so nothing is exposed to the network.
+- **AI output is never trusted as code.** The page inserts all text with `textContent`, never as HTML, so a malicious reply cannot run script in the browser.
+- **Validated inputs.** Request names, chaos modes, budgets, decisions and trace file names are checked on the server; file reads are limited to the `data/` folder.
+- **External data is checked before use.** Exchange-rate responses are validated for status, shape, type and range; anything doubtful is rejected.
+- **Humans approve every output**, and the safe default (no answer) is *Disapprove*.
+
+Planned in Stage 7: stronger defences against prompt injection (treating document and API content strictly as data), pinned dependency versions, and a security test suite.
 
 ---
 
