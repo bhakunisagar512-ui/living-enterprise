@@ -1,0 +1,11 @@
+MASTER SERVICES AGREEMENT
+Vendor: Acme Cloud Services Pvt Ltd
+Client: Nimbus Retail Ltd
+Service: Cloud hosting and 24x7 support
+Contract term: 1 November 2025 to 31 October 2026
+Annual fee: Rs 24,00,000
+
+Clause 4.1 - Uptime SLA: Vendor guarantees 99.9% monthly uptime.
+Clause 4.2 - Service credits: For each month below 99.9% uptime, client receives a 5% credit on that month's fee.
+Clause 8.1 - Renewal: Contract may be renewed for 12 months by mutual written agreement.
+Clause 8.2 - Price cap: Renewal price increases are capped at 7% unless both parties agree otherwise in writing.
