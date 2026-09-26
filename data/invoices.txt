@@ -1,0 +1,8 @@
+NIMBUS RETAIL - ACCOUNTS PAYABLE: ACME CLOUD SERVICES INVOICES
+
+Invoice INV-2607-01 | Service period: July 2026      | Amount: Rs 2,00,000 | Status: Paid on 5 Jul 2026
+Invoice INV-2608-01 | Service period: August 2026    | Amount: Rs 2,00,000 | Status: Paid on 5 Aug 2026
+Invoice INV-2609-01 | Service period: September 2026 | Amount: Rs 2,00,000 | Status: Paid on 5 Sep 2026
+Invoice INV-2609-07 | Service period: September 2026 | Amount: Rs 2,00,000 | Status: Pending, due 30 Sep 2026
+
+Note: Contract billing is one invoice per month at the monthly fee (see contract.txt).
