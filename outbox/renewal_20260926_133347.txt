@@ -1,0 +1,14 @@
+Dear Acme Cloud Services team,
+
+Thank you for your email regarding renewal of our services agreement for a further 12-month term. We value our partnership and are open to renewing, subject to the following.
+
+Per Clause 8.2 of our contract, renewal price increases are capped at 7% unless both parties agree otherwise in writing. The proposed 12% increase exceeds this cap and cannot be accepted as presented. We are prepared to discuss an increase within the 7% cap under Clause 8.2, and would welcome a revised proposal reflecting this.
+
+Separately, under Clause 4.1 our SLA target is 99.9% monthly uptime, with credits of 5% per month applying under Clause 4.2 where this is not met. Our review of the past service months identifies two months (May and July) that fell below the 99.9% target, resulting in service credits owed of Rs 20,000, which have not yet been claimed or applied. We request that this credit be confirmed and applied to our account prior to finalizing any renewal, consistent with Clause 8.1's requirement of mutual written agreement for renewal.
+
+We have also reviewed current market offerings from other providers at comparable service levels and lower monthly rates, which reinforces our position that any renewal pricing should remain within the contractual cap.
+
+We look forward to your revised proposal reflecting an increase within the 7% cap under Clause 8.2, along with confirmation of the Rs 20,000 service credit, so we can proceed with renewal discussions promptly.
+
+Best regards,
+Nimbus Retail Procurement

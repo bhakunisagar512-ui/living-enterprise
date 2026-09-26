@@ -1,0 +1,16 @@
+Dear Acme Cloud Services team,
+
+Thank you for confirming that our contract ends on 31 October 2026 (Clause 8.1), and for proposing a 12-month renewal.
+
+Per Clause 8.2, renewal price increases are capped at 7% unless both parties agree otherwise in writing. The proposed 12% increase (from Rs 24,00,000 to Rs 26,88,000 annually) exceeds this cap and also falls under our internal policy requiring increases above 10% to be negotiated down rather than accepted outright. We are therefore unable to accept the 12% increase as presented.
+
+We have also received competitive quotes for comparable cloud hosting services: Zenith Cloud at approximately Rs 2,10,804/month (indicative, based on current exchange rates) with 99.95% uptime SLA, and Orbit Hosting at approximately Rs 2,15,595/month (indicative) with 99.9% uptime SLA — both below your proposed renewal rate of Rs 2,24,000/month.
+
+Given these factors, we would like to counter-offer a renewal at no more than the 7% cap permitted under Clause 8.2, and invite any written justification you can provide for a higher figure, which we will evaluate accordingly.
+
+Separately, our records show your service fell below the 99.9% uptime target (Clause 4.1) in May and July, entitling us to service credits under Clause 4.2. We are formally claiming Rs 20,000 in unclaimed service credits (Rs 10,000 for each affected month) prior to finalizing renewal terms.
+
+Please confirm your position on the revised pricing and process the service credits at your earliest convenience.
+
+Regards,
+Nimbus Retail Procurement

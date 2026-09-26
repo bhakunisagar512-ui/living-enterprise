@@ -1,0 +1,12 @@
+Dear Acme Cloud Services Team,
+
+Thank you for your email regarding the renewal of our services agreement, which is due to end on 31 October 2026. We value our partnership and are supportive of continuing the relationship for a further 12 months, subject to the terms below.
+
+Per Clause 8.2 of our contract, any renewal price increase is capped at 7% unless both parties agree otherwise in writing. The proposed 12% increase exceeds this cap, and we are not in a position to accept an increase beyond the contracted limit. Based on the current annual fee of Rs 24,00,000, a 7% increase would bring the renewal fee to Rs 25,68,000 per annum. We propose renewing on this basis.
+
+Separately, we would like to flag that service performance during the current term fell short of the 99.9% monthly uptime commitment in Clause 4.1 for two months: May 2026 (99.42%) and July 2026 (99.61%), which also coincided with three major incidents (two in May, one in July). Under Clause 4.2, this entitles us to service credits of Rs 10,000 per affected month, totaling Rs 20,000. As no credits have been claimed to date, we request that this Rs 20,000 be applied against our next invoice under the renewed terms.
+
+We look forward to your confirmation of the 7% renewal terms and the applied credit, and are happy to discuss further at your earliest convenience.
+
+Best regards,
+Nimbus Retail Procurement

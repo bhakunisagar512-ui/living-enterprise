@@ -1,0 +1,99 @@
+{
+  "request": "renewal",
+  "runs": 5,
+  "when": "2026-09-26 13:34",
+  "completion_rate": "3/5",
+  "correct_rate": "3/5",
+  "first_draft_approved": "3/3",
+  "avg_cost_rs": 18.5,
+  "total_cost_rs": 92.4,
+  "avg_seconds": 35.2,
+  "avg_agent_calls": 3.2,
+  "avg_tokens": 67660.8,
+  "results": [
+    {
+      "run": 1,
+      "completed": true,
+      "correct": true,
+      "missing": [],
+      "wrong": [],
+      "outcome": "approved by human and released to outbox\\renewal_20260926_133241.txt",
+      "escalations": [],
+      "drafts": 1,
+      "agent_calls": 4,
+      "api_calls": 1,
+      "tokens": 25109,
+      "cost_rs": 7.14,
+      "seconds": 39,
+      "warnings": 0
+    },
+    {
+      "run": 2,
+      "completed": false,
+      "correct": false,
+      "missing": [],
+      "wrong": [],
+      "outcome": "aborted by human at step 1 (retriever)",
+      "escalations": [
+        "A required document is missing"
+      ],
+      "drafts": 0,
+      "agent_calls": 2,
+      "api_calls": 1,
+      "tokens": 32920,
+      "cost_rs": 7.18,
+      "seconds": 22,
+      "warnings": 0
+    },
+    {
+      "run": 3,
+      "completed": true,
+      "correct": true,
+      "missing": [],
+      "wrong": [],
+      "outcome": "approved by human and released to outbox\\renewal_20260926_133347.txt",
+      "escalations": [],
+      "drafts": 1,
+      "agent_calls": 4,
+      "api_calls": 1,
+      "tokens": 76829,
+      "cost_rs": 22.38,
+      "seconds": 44,
+      "warnings": 0
+    },
+    {
+      "run": 4,
+      "completed": true,
+      "correct": true,
+      "missing": [],
+      "wrong": [],
+      "outcome": "approved by human and released to outbox\\renewal_20260926_133435.txt",
+      "escalations": [],
+      "drafts": 1,
+      "agent_calls": 4,
+      "api_calls": 1,
+      "tokens": 113939,
+      "cost_rs": 35.19,
+      "seconds": 48,
+      "warnings": 0
+    },
+    {
+      "run": 5,
+      "completed": false,
+      "correct": false,
+      "missing": [],
+      "wrong": [],
+      "outcome": "aborted by human at step 1 (retriever)",
+      "escalations": [
+        "A required document is missing"
+      ],
+      "drafts": 0,
+      "agent_calls": 2,
+      "api_calls": 1,
+      "tokens": 89507,
+      "cost_rs": 20.51,
+      "seconds": 23,
+      "warnings": 0
+    }
+  ]
+}

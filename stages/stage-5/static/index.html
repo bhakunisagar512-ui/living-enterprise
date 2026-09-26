@@ -597,7 +597,7 @@ function openDecision(p) {
         el("div", { class: "sec" }, el("h4", { text: "Request" }), el("div", { text: r.request })),
         el("div", { class: "sec" }, el("h4", { text: `Validator: ${r.verdict} (${r.checks.length - fails} passed, ${fails} failed)` }),
           el("div", { class: "checks" }, ...r.checks.map((c) => el("div", { class: "check" },
-            el("span", { class: "chip " + (c.result === "PASS" ? "ok" : "bad"), text: c.result }),
+            el("span", { class: "chip " + (c.result === "PASS" ? "ok" : c.result === "N/A" ? "" : "bad"), text: c.result }),
             el("span", {}, el("b", { text: c.rule }), c.note ? " · " + c.note : ""))))),
         approvals.length ? el("div", { class: "sec" }, el("h4", { text: "Approvals only a person can give: tick each one to confirm" }),
           ...r.needs_human.map((n, i) => el("label", { class: "approval" }, approvals[i], el("span", { text: n })))) : null,

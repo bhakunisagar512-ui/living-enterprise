@@ -1,0 +1,12 @@
+Dear Acme Cloud Services team,
+
+Thank you for your email regarding renewal of our services agreement currently running from 1 November 2025 to 31 October 2026.
+
+Nimbus Retail is open to renewing for a further 12-month term under Clause 8.1, which permits renewal by mutual written agreement. However, we are unable to accept the proposed 12% increase. Under Clause 8.2, renewal price increases are capped at 7% unless both parties agree otherwise in writing, and a 12% increase exceeds this cap. We would like to discuss a revised figure within the permitted range, supported by justification for the cost pressures you have cited.
+
+Separately, per our SLA terms under Clause 4.1 (99.9% monthly uptime guarantee) and Clause 4.2 (service credit policy), we have identified shortfalls in May and July where uptime fell below target. This entitles Nimbus Retail to service credits totaling Rs 20,000, which have not yet been claimed or applied. We request that these credits be confirmed and settled as part of finalizing the renewal.
+
+We look forward to your response so we can proceed with renewal discussions on mutually agreeable terms.
+
+Best regards,
+Nimbus Retail Procurement

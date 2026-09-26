@@ -1,0 +1,99 @@
+{
+  "request": "renewal",
+  "runs": 5,
+  "when": "2026-09-26 13:43",
+  "completion_rate": "4/5",
+  "correct_rate": "3/5",
+  "first_draft_approved": "4/4",
+  "avg_cost_rs": 5.9,
+  "total_cost_rs": 29.56,
+  "avg_seconds": 48.4,
+  "avg_agent_calls": 4.2,
+  "avg_tokens": 23235.2,
+  "results": [
+    {
+      "run": 1,
+      "completed": true,
+      "correct": true,
+      "missing": [],
+      "wrong": [],
+      "outcome": "approved by human and released to outbox\\renewal_20260926_134015.txt",
+      "escalations": [],
+      "drafts": 1,
+      "agent_calls": 4,
+      "api_calls": 0,
+      "tokens": 18150,
+      "cost_rs": 4.52,
+      "seconds": 41,
+      "warnings": 0
+    },
+    {
+      "run": 2,
+      "completed": true,
+      "correct": true,
+      "missing": [],
+      "wrong": [],
+      "outcome": "approved by human and released to outbox\\renewal_20260926_134103.txt",
+      "escalations": [],
+      "drafts": 1,
+      "agent_calls": 4,
+      "api_calls": 1,
+      "tokens": 24627,
+      "cost_rs": 6.04,
+      "seconds": 48,
+      "warnings": 0
+    },
+    {
+      "run": 3,
+      "completed": false,
+      "correct": false,
+      "missing": [],
+      "wrong": [],
+      "outcome": "aborted by human at validation of draft 1",
+      "escalations": [
+        "An agent returned malformed output twice: Validator output could not be parsed:\n{\"verdict\":\"REJECTED\",\"checks\":[{\"rule\":\"R"
+      ],
+      "drafts": 1,
+      "agent_calls": 5,
+      "api_calls": 1,
+      "tokens": 26111,
+      "cost_rs": 7.83,
+      "seconds": 61,
+      "warnings": 1
+    },
+    {
+      "run": 4,
+      "completed": true,
+      "correct": false,
+      "missing": [
+        "May and July named"
+      ],
+      "wrong": [],
+      "outcome": "approved by human and released to outbox\\renewal_20260926_134250.txt",
+      "escalations": [],
+      "drafts": 1,
+      "agent_calls": 4,
+      "api_calls": 1,
+      "tokens": 23170,
+      "cost_rs": 5.34,
+      "seconds": 46,
+      "warnings": 0
+    },
+    {
+      "run": 5,
+      "completed": true,
+      "correct": true,
+      "missing": [],
+      "wrong": [],
+      "outcome": "approved by human and released to outbox\\renewal_20260926_134336.txt",
+      "escalations": [],
+      "drafts": 1,
+      "agent_calls": 4,
+      "api_calls": 1,
+      "tokens": 24118,
+      "cost_rs": 5.83,
+      "seconds": 46,
+      "warnings": 0
+    }
+  ]
+}

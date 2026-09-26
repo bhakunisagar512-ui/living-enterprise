@@ -1,0 +1,14 @@
+Dear Acme Cloud Services team,
+
+Thank you for your email regarding renewal of our Master Services Agreement, currently in effect from 1 November 2025 to 31 October 2026.
+
+We are open to renewing for a further 12 months under Clause 8.1. However, the proposed 12% increase (from Rs 24,00,000 to Rs 26,88,000 annually, i.e. Rs 2,24,000/month) exceeds the 7% price cap set out in Clause 8.2, which permits increases beyond this threshold only by mutual written agreement. We are not prepared to accept 12% at this time.
+
+Separately, per Clause 4.1 (99.9% monthly uptime target) and Clause 4.2 (5% service credit per month below target), your reported uptime fell short in May 2026 (99.42%) and July 2026 (99.61%). This entitles us to service credits of Rs 20,000 (2 months × Rs 10,000), not yet applied against our account. We request this Rs 20,000 be credited as a separate line item against the current or renewal invoice; it is not netted into the monthly rate below.
+
+Regarding pricing, we have received market quotes for comparable services indicating a monthly range of approximately Rs 2,10,804 to Rs 2,15,595 (indicative figures, based on an unverified exchange rate), both above your current rate of Rs 2,00,000/month. Given this, we propose renewal at no more than the 7% cap under Clause 8.2: Rs 25,68,000 annually, i.e. Rs 2,14,000/month, with the Rs 20,000 SLA credit applied additionally and separately against the first invoice under the new term.
+
+Please confirm your acceptance of these terms, or propose a revised offer within the 7% cap, so we can finalize the renewal ahead of the 31 October 2026 expiry.
+
+Regards,
+Nimbus Retail Procurement

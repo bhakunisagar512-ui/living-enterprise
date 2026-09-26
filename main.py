@@ -30,7 +30,7 @@ from typing import Literal, Optional
 
 from crewai import Agent, Crew, LLM, Process, Task
 from crewai.tools import tool
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, field_validator
 
 
 def quiet_crewai():
@@ -264,7 +264,7 @@ def save_cache(pair: str, rate: float, date: str, source: str):
     cache = load_cache()
     cache[pair] = {"rate": rate, "date": date, "source": source,
                    "fetched_at": datetime.now().strftime("%Y-%m-%d %H:%M")}
-    FX_CACHE.parent.mkdir(exist_ok=True)
+    FX_CACHE.parent.mkdir(parents=True, exist_ok=True)
     FX_CACHE.write_text(json.dumps(cache, indent=2), encoding="utf-8")
 
 
@@ -404,10 +404,33 @@ class Plan(BaseModel):
     escalate: Optional[str] = None
 
 
+def _as_text(item) -> str:
+    """Agents sometimes return {"fix": "..."} instead of "..."; keep the words either way."""
+    if isinstance(item, dict):
+        return "; ".join(str(v) for v in item.values())
+    return str(item)
+
+
 class Check(BaseModel):
     rule: str
-    result: Literal["PASS", "FAIL"]
+    result: Literal["PASS", "FAIL", "N/A"]
     note: str = ""
+
+    @field_validator("rule", "note", mode="before")
+    @classmethod
+    def _text(cls, v):
+        return "" if v is None else _as_text(v)
+
+    @field_validator("result", mode="before")
+    @classmethod
+    def _normalise(cls, v):
+        """Accept reasonable variations. Anything doubtful counts as FAIL (the safe side)."""
+        word = str(v).strip().upper().replace("_", " ")
+        if word in ("PASS", "PASSED", "OK", "YES", "TRUE", "COMPLIANT"):
+            return "PASS"
+        if word in ("N/A", "NA", "NOT APPLICABLE", "SKIP", "SKIPPED"):
+            return "N/A"
+        return "FAIL"     # FAIL, PARTIAL, WARNING, PARTIAL FAIL, unknown words ...
 
 
 class Review(BaseModel):
@@ -415,6 +438,19 @@ class Review(BaseModel):
     checks: list[Check] = []
     fixes: list[str] = []
     needs_human: list[str] = []
+
+    @field_validator("verdict", mode="before")
+    @classmethod
+    def _verdict(cls, v):
+        word = str(v).strip().upper()
+        return "APPROVED" if word in ("APPROVED", "APPROVE", "PASS", "PASSED") else "REJECTED"
+
+    @field_validator("fixes", "needs_human", mode="before")
+    @classmethod
+    def _texts(cls, v):
+        if v is None:
+            return []
+        return [_as_text(x) for x in (v if isinstance(v, list) else [v])]
 
 
 class StopRun(Exception):
@@ -575,6 +611,24 @@ def kickoff_with_timeout(crew, timeout: float):
     return result["out"]
 
 
+USAGE_FIELDS = ("prompt_tokens", "completion_tokens", "cached_prompt_tokens",
+                "cache_creation_tokens", "total_tokens")
+
+
+def llm_usage(llm) -> dict:
+    """The model object's running token totals (all calls made with it so far)."""
+    try:
+        summary = llm.get_token_usage_summary()
+        return {f: getattr(summary, f, 0) or 0 for f in USAGE_FIELDS}
+    except Exception:
+        return {f: 0 for f in USAGE_FIELDS}
+
+
+def usage_delta(before: dict, after: dict):
+    from types import SimpleNamespace
+    return SimpleNamespace(**{f: max(0, after[f] - before[f]) for f in USAGE_FIELDS})
+
+
 def call_cost_usd(model: str, usage) -> float:
     """Real cost of one call from its token usage. Unknown models are priced like Sonnet (safe side)."""
     price_in, price_out, price_cache = PRICES.get(model.split("/")[-1], PRICES["claude-sonnet-5"])
@@ -701,6 +755,7 @@ class Run:
                   f"Rs {self.cost_rs():.2f} of Rs {self.budget_rs:.0f} | "
                   f"{self.agent_seconds()}s of {self.time_limit}s)")
             task = Task(description=instruction, expected_output=expected, agent=agent)
+            usage_before = llm_usage(agent.llm)
             crew = Crew(agents=[agent], tasks=[task], process=Process.sequential, verbose=False)
             started = time.time()
             try:
@@ -728,7 +783,11 @@ class Run:
                 print(f"\n  [x] {agent.role} could not be reached: {reason}")
                 raise StopRun(self.outcome)
         text = out.raw.strip()
-        usage = getattr(out, "token_usage", None)
+        # CrewAI reports usage as the model's running total since the program started (shared by
+        # every agent on that model), so this call's usage = total after - total before.
+        usage = usage_delta(usage_before, llm_usage(agent.llm))
+        if not usage.total_tokens:          # model gave no running total: fall back to the crew's figure
+            usage = getattr(out, "token_usage", None) or usage
         used = getattr(usage, "total_tokens", 0) or 0
         call_usd = call_cost_usd(agent.llm.model, usage)
         self.tokens += used
@@ -762,7 +821,7 @@ class Run:
         return "\n\n".join(f"[Step {i}]\n{t}" for i, t in self.results.items()) or "(none)"
 
     def save(self):
-        RUNS_DIR.mkdir(exist_ok=True)
+        RUNS_DIR.mkdir(parents=True, exist_ok=True)
         stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         path = RUNS_DIR / f"trace_{self.label}_{stamp}.json"
         path.write_text(json.dumps({
@@ -849,8 +908,10 @@ Rules:
 - The LAST line of your answer MUST be exactly one of:
     MISSING: none
     MISSING: <what the request needs that is in none of the documents>
-  Example: if the request is about a vendor and there is no contract for that vendor,
-  write "MISSING: contract for <vendor>".""",
+  Use MISSING only when the request CANNOT be answered without it, for example there is no
+  contract at all for the vendor in the request ("MISSING: contract for <vendor>").
+  Details that simply are not in the documents (a notice period, incident logs, a clause that
+  does not exist) are NOT missing: list them as "Not in documents: ..." and end with MISSING: none.""",
                 "Bullet list of facts with sources, then a final line starting 'MISSING:'.", why=step.why)
             missing = missing_line(text)
             if missing is None:
@@ -905,6 +966,8 @@ Facts gathered (the ONLY information you may use):
 Rules:
 - Use only numbers, names and claims that appear in the facts above.
 - Quote contract clause and policy rule numbers where they apply.
+- When you claim money or cite a figure, name the specific items behind it
+  (e.g. which months missed the SLA, which invoice numbers).
 - NEVER use square brackets or placeholders like [date] or [name].
 - If a date or detail is not in the facts, simply leave it out and write around it
   (e.g. "your recent email", "at your earliest convenience"). Never invent one.
@@ -960,10 +1023,13 @@ Rule 2) are NOT errors in the draft and are NOT a reason to reject it. Put them 
 instead. Only reject for problems the writer can fix in the text. Leave "needs_human" empty if none.
 
 Reply with ONLY this JSON:
-{{"verdict": "APPROVED or REJECTED", "checks": [{{"rule": "...", "result": "PASS or FAIL", "note": "..."}}], "fixes": ["..."], "needs_human": ["..."]}}"""
+{{"verdict": "APPROVED or REJECTED", "checks": [{{"rule": "...", "result": "PASS, FAIL or N/A", "note": "..."}}], "fixes": ["..."], "needs_human": ["..."]}}"""
     review = run.call_json("validator", instruction, Review, f"validation of draft {attempt}",
                            why="Every output is checked before a human sees it")
     fails = [c for c in review.checks if c.result == "FAIL"]
+    if fails and review.verdict == "APPROVED":
+        review.verdict = "REJECTED"
+        run.warn("Validator said APPROVED but listed failed checks; treated as REJECTED")
     print(f"  Verdict: {review.verdict}  ({len(review.checks) - len(fails)} pass, {len(fails)} fail)")
     run.emit("verdict", draft=run.drafts, verdict=review.verdict,
              passed=len(review.checks) - len(fails), failed=len(fails),
@@ -1044,7 +1110,7 @@ def final_review(run: Run, plan: Plan, draft: str, review: Review) -> str:
 def release(run: Run, text: str) -> Path:
     """The irreversible action. In this prototype, 'sending' = saving to the outbox folder."""
     outbox = BASE / "outbox"
-    outbox.mkdir(exist_ok=True)
+    outbox.mkdir(parents=True, exist_ok=True)
     path = outbox / f"{run.label}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     path.write_text(text, encoding="utf-8")
     run.log("system", "RELEASED", str(path), why="Human approved")
