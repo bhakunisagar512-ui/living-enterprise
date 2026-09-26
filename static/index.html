@@ -279,7 +279,11 @@ function el(tag, attrs = {}, ...kids) {
 async function api(path, opts = {}) {
   const res = await fetch(path, { headers: { "Content-Type": "application/json" }, ...opts });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.detail || res.statusText);
+  if (!res.ok) {
+    const d = data.detail;   // FastAPI validation errors arrive as a list
+    const msg = Array.isArray(d) ? d.map((x) => `${(x.loc || []).slice(-1)[0] || "input"}: ${x.msg}`).join("; ") : d;
+    throw new Error(msg || res.statusText);
+  }
   return data;
 }
 const rs = (v) => "Rs " + (Number(v) || 0).toFixed(2);

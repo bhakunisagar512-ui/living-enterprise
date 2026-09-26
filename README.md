@@ -284,6 +284,7 @@ python main.py dispute     # duplicate invoice: dispute it
 python main.py question    # CFO question: internal answer, no vendor email
 python main.py compare     # USD competitor quotes: uses the LIVE currency API
 python main.py unknown     # vendor with no contract on file: 🚩 escalates
+python main.py injection   # vendor email that tries to give orders to the AI: flagged, not obeyed
 
 python main.py compare --chaos           # all currency APIs fail
 python main.py compare --chaos-partial   # primary currency API fails
@@ -293,7 +294,18 @@ python main.py renewal --time-limit 30   # hits the time budget
 python main.py renewal --agent-timeout 5 # AI calls time out and are retried
 
 python reliability.py renewal 5          # 5 runs, completion and correctness report
+python reliability.py injection 3        # the prompt-injection attack must not change the answer
 ```
+
+**Tests (no API key, no cost; fake agents replace Claude):**
+
+```bash
+pip install -r requirements-dev.txt
+pytest                     # 110 tests: tools, API recovery, security, every workflow path, web API
+ruff check .               # lint
+```
+
+GitHub Actions runs the same tests and lint on every push (`.github/workflows/tests.yml`).
 
 Run `compare` once without chaos first, so a last known good rate is cached for the chaos demo.
 
@@ -305,26 +317,32 @@ A typical run uses 4–6 agent calls, about 15,000–30,000 tokens, **Rs 3–9**
 
 ```
 .
-├── main.py                  the system: agents, tools, recovery, budgets (latest stage)
-├── app.py                   web server for the UI
-├── static/index.html        the web UI (plain HTML/CSS/JS)
-├── reliability.py           repeated-run test: completion and correctness
-├── data/                    company documents the agents read
-│   ├── contract.txt         Acme master services agreement
-│   ├── policy.txt           procurement policy (Rules 1-5)
-│   ├── spend.txt            spend and monthly uptime
-│   ├── invoices.txt         invoices, including a duplicate
-│   └── quotes.txt           competitor quotes in USD
-├── stages/                  a runnable snapshot of each build stage
-│   ├── stage-1/
-│   ├── stage-2/
-│   ├── stage-3/
-│   ├── stage-4/
-│   └── stage-5/
-├── docs/                    design document (PDF) and screenshots
-├── runs/                    trace files from real runs (new runs add more)
-├── outbox/                  approved outputs from real runs
-└── requirements.txt
+├── main.py                    command line (thin entry point)
+├── app.py                     web UI server (thin entry point)
+├── living_enterprise/         the system, one module per job
+│   ├── config.py              settings, stopping conditions, prices, sample requests
+│   ├── security.py            untrusted-content fencing, injection detection, secret redaction, output checks
+│   ├── schemas.py             Plan / Review structures with safe parsing
+│   ├── tools.py               document tools, SLA calculator, live currency converter
+│   ├── fx.py                  exchange-rate API recovery chain
+│   ├── agents.py              the four agents (built on first use)
+│   ├── costs.py               real cost from token usage, AI-provider error sorting
+│   ├── human.py               the human channel (terminal; web and tests plug in their own)
+│   ├── run.py                 one run: trace, flags, budgets, the only place an AI is called
+│   ├── workflow.py            plan → execute → validate → human review → release
+│   ├── web.py                 FastAPI server (local only)
+│   └── cli.py                 argument parsing
+├── static/index.html          the web UI (plain HTML/CSS/JS)
+├── tests/                     110 pytest tests with fake agents
+├── reliability.py             repeated real runs: completion and correctness
+├── data/                      company documents the agents read
+├── stages/                    a runnable snapshot of each build stage (stage-6 = last single-file version)
+├── docs/                      design document (PDF) and screenshots
+├── runs/ · outbox/            traces and approved outputs from real runs
+├── requirements.txt           pinned runtime dependencies
+├── requirements-dev.txt       test and lint tools
+├── pyproject.toml             pytest and ruff settings
+└── SECURITY.md                threat model and defences
 ```
 
 ---
@@ -340,27 +358,44 @@ The project was built in stages, each tested with real Claude runs before moving
 | **3 · Real API + recovery** | Live currency API · backup API · cached fallback · response validation · chaos mode · parallel-safe rate sharing | Survives failed, slow and malformed API responses |
 | **4 · Budgets** | Cost budget in rupees from real token usage · time budget · 80% warnings · per-call AI timeout · AI provider error handling | Every stopping condition P-03 lists, enforced before money is spent |
 | **5 · Web UI** | FastAPI + plain HTML/CSS/JS · live event stream · escalation and Final Review in the browser · required-approval tick-boxes · past-run viewer | The whole system can be watched and controlled from one page |
-| **6 · Proof** (current `main.py`) | Reliability test with automatic correctness checks · per-call cost measurement fix · tolerant-but-safe Validator parsing · every request tested live, including chaos | **5 / 5 completed, 5 / 5 correct, about Rs 6 per request** |
+| **6 · Proof** | Reliability test with automatic correctness checks · per-call cost measurement fix · tolerant-but-safe Validator parsing · every request tested live, including chaos | **5 / 5 completed, 5 / 5 correct, about Rs 6 per request** |
+| **7 · Production structure + security** (current code) | Package of focused modules · human and event channels passed in, not global · 110 unit tests with fake agents · CI · pinned dependencies · prompt-injection defence in depth · secret redaction everywhere · local-only web server with Host/Origin checks | Same behaviour, now tested on every change; an injection attack is flagged and not obeyed |
 
 ### Planned next
 
-- **Stage 7:** code split into modules with unit tests; stronger prompt-injection defences; pinned dependencies
 - **Stage 8:** optional online hosting with an access code and rate limits
 
 ---
 
 ## Security
 
-- **No secrets in the repo.** The API key is read from an environment variable only; `.gitignore` excludes `.env` files.
-- **Local by default.** The web server listens on `127.0.0.1` only, so nothing is exposed to the network.
-- **AI output is never trusted as code.** The page inserts all text with `textContent`, never as HTML, so a malicious reply cannot run script in the browser.
-- **Validated inputs.** Request names, chaos modes, budgets, decisions and trace file names are checked on the server; file reads are limited to the `data/` folder.
-- **External data is checked before use.** Exchange-rate responses are validated for status, shape, type and range; anything doubtful is rejected.
-- **Humans approve every output**, and the safe default (no answer) is *Disapprove*.
+Full details are in [SECURITY.md](SECURITY.md). In short:
 
-Planned in Stage 7: stronger defences against prompt injection (treating document and API content strictly as data), pinned dependency versions, and a security test suite.
+- **Outside text is data, never instructions.** The request, the documents and the API responses reach the agents inside marked `UNTRUSTED` blocks. Known injection phrasing is detected in code and shown to the Validator and to you, and a draft that obeys it fails validation. The `injection` sample request is a live attack used in tests.
+- **No secrets anywhere.** The key comes from an environment variable only, and every trace, log line, browser event and output is redacted.
+- **Tools are locked down.** Documents are opened by plain file name inside `data/` only, the currency API is HTTPS-only and size-limited, and only a validated number reaches the AI.
+- **Output is checked in code.** Secrets are removed, and links or e-mail addresses found in no source are flagged.
+- **Local-only web server.** It binds to 127.0.0.1, refuses non-local hosts and cross-site POSTs, validates every input, sets strict headers, and the page renders text only.
+- **A human approves every output.** The safe default is Disapprove.
 
 ---
+
+## Future scope
+
+**Upload your own company documents.** Today the agents read the sample files in `data/`. Next, a team will be able to upload its own contracts, policies, invoices and reports from the web page and run requests against them. Planned safeguards:
+
+- **Safe uploads:** only allowed file types (PDF, DOCX, TXT), size limits, file-type checks on the content itself (not just the name), malware scanning, and text extraction in an isolated step.
+- **Every uploaded document is untrusted:** it is scanned for prompt injection on upload, flagged to the reviewer, and always passed to the agents as data, never as instructions.
+- **Private by default:** documents are encrypted at rest and kept separate per company and per user, and only the agents working on that user's request can read them. They can be deleted at any time, and old ones are removed automatically.
+- **Sign-in and roles:** user accounts with roles, so only permitted people can upload, run requests or approve outputs (for example, Finance approves payments).
+- **Full audit:** every upload, read, approval and deletion is written to the trace.
+
+**Stronger security overall:**
+
+- A second, independent model that screens documents and drafts for injection and data leaks
+- Secrets kept in a secrets manager, with automatic key rotation
+- Rate limits and spend caps per user
+- Automated security tests (injection and upload attacks) run on every change, plus dependency vulnerability scanning in CI
 
 ## What we would harden next
 

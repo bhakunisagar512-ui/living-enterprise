@@ -10,3 +10,7 @@ venv/
 
 # machine-specific cache (last known exchange rate)
 cache/
+
+# tests and tools
+.pytest_cache/
+.ruff_cache/

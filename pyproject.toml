@@ -1,0 +1,19 @@
+[project]
+name = "living-enterprise"
+version = "0.7.0"
+description = "Multi-agent system that plans, delegates, recovers and keeps a human in charge (P-03)"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+exclude = ["stages"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501", "B008", "E731"]
