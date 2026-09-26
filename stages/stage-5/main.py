@@ -877,7 +877,7 @@ Reply with ONLY this JSON:
     print(f"  Plan: {plan.summary}")
     for s in plan.steps:
         print(f"    {s.id}. [{s.agent}] {s.task}\n       why: {s.why}")
-    run.log("Planner", "PLAN", plan.model_dump_json(indent=2))
+    run.log("Planner", "PLAN", plan.model_dump_json(indent=2), plan=plan.model_dump())  # full plan, untruncated
     run.emit("plan", summary=plan.summary, reply_type=plan.reply_type,
              steps=[s.model_dump() for s in plan.steps])
     return plan
@@ -951,7 +951,9 @@ def missing_line(text: str) -> Optional[str]:
 
 def write_draft(run: Run, plan: Plan, task: str, why: str, fixes: str = "", previous: str = "") -> str:
     kind = ("an email to the vendor, signed by Nimbus Retail Procurement"
-            if plan.reply_type == "vendor_email" else "a short internal answer")
+            if plan.reply_type == "vendor_email" else
+            "a short internal answer addressed to the person inside our company who asked "
+            "(for example the CFO). Do not write to the vendor or ask the vendor for anything")
     revision = ""
     if fixes:
         revision = f"\n\nYour previous draft was REJECTED. Fix every point below.\n{fixes}\n\nPrevious draft:\n{previous}"

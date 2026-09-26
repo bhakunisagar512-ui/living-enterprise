@@ -214,7 +214,7 @@ textarea { width: 100%; min-height: 72px; border: 1px solid var(--line-strong); 
           <label class="field"><span>sec</span><input id="timeLimit" type="number" min="10" step="10" value="300" aria-label="Time budget in seconds"></label>
         </div>
         <button class="btn btn-primary" id="runBtn">Run request</button>
-        <div class="hint" id="runHint">Each run makes 4–7 real Claude calls (about Rs 7–15).</div>
+        <div class="hint" id="runHint">Each run makes 4–7 real Claude calls (typically Rs 3–9, under a minute).</div>
       </div>
     </section>
 
@@ -636,7 +636,7 @@ async function viewTrace(name) {
     max_calls: 14, api_calls: d.api_calls || 0, tokens: d.total_tokens || 0, warnings: (d.warnings || []).length };
   showStats(st);
   for (const e of d.trace || []) {
-    if (e.action === "PLAN") { try { showPlan(JSON.parse(e.detail)); } catch (_) {} }
+    if (e.action === "PLAN") { try { showPlan(e.plan || JSON.parse(e.detail)); } catch (_) {} }
     if (AGENT_NAMES.includes(e.actor) && e.action === "completed step") nodeState[e.actor] = { s: "done", text: "Done" };
     if (e.actor === "human") nodeState.Human = { s: "done", text: e.action.split(": ")[1] || "Decided" };
     const r = describe(e); if (r) addRow(e.time, r);

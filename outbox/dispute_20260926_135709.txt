@@ -1,0 +1,22 @@
+Subject: Dispute of Duplicate Invoice – INV-2609-07 (September 2026 Hosting)
+
+Dear Acme Cloud Services Team,
+
+We are writing regarding two invoices received for September 2026 hosting services under our contract (term: 1 November 2025 to 31 October 2026):
+
+- INV-2609-01: September 2026 service period, Rs 2,00,000, paid on 5 September 2026
+- INV-2609-07: September 2026 service period, Rs 2,00,000, status pending, due 30 September 2026
+
+Both invoices cover the identical service period and amount. Our contract specifies one invoice per month at a monthly fee of Rs 2,00,000 (12 months = Rs 24,00,000 annually). As INV-2609-01 has already been paid in full for September 2026, INV-2609-07 appears to be a duplicate that should not have been issued.
+
+We request that you:
+1. Confirm that INV-2609-07 is indeed a duplicate of INV-2609-01;
+2. Cancel INV-2609-07 in your billing system; and
+3. Provide written confirmation of this cancellation for our records.
+
+If any payment has already been processed against INV-2609-07, please issue a credit note for Rs 2,00,000 at your earliest convenience.
+
+We value our ongoing partnership and appreciate your prompt attention to this matter. Please let us know if you require any further information from our side to process this correction.
+
+Kind regards,
+Nimbus Retail Procurement

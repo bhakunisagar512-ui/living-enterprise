@@ -1,0 +1,19 @@
+Subject: Acme Cloud Services – SLA Performance & Service Credit Summary (Current Contract Year)
+
+Hi,
+
+Per the Master Services Agreement (contract term 1 November 2025 – 31 October 2026), Clause 4.1 sets a 99.9% monthly uptime guarantee, with Clause 4.2 providing a 5% service credit of the monthly fee for each month below this target.
+
+Reviewing monthly uptime from November 2025 through September 2026, Acme missed the SLA in 2 months this contract year:
+- May: 99.42%
+- July: 99.61%
+
+All other months (November, December, January, February, March, April, June, August, September) met or exceeded the 99.9% threshold.
+
+Based on the monthly fee of Rs 2,00,000, the 5% credit per missed month equals Rs 10,000/month. Total service credit owed: Rs 20,000 (2 months × Rs 10,000), per Clause 4.2.
+
+Our records show no service credits have been claimed yet this contract year. We recommend formally invoking Clause 4.2 to claim the full Rs 20,000 credit from Acme for the May and July shortfalls.
+
+Please advise if you'd like us to proceed with issuing the claim to Acme.
+
+Nimbus Retail Procurement

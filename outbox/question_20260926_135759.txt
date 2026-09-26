@@ -1,0 +1,16 @@
+Re: Acme Uptime SLA Performance – Contract Year Nov 2025 to Oct 2026 (Reviewed Through September 2026)
+
+Per Clause 4.1 of the contract, Acme is required to maintain 99.9% monthly uptime. Reviewing monthly performance data from November 2025 through September 2026, Acme fell below this threshold in two months:
+
+- May 2026: 99.42% uptime
+- July 2026: 99.61% uptime
+
+All other months in the period (November, December, January, February, March, April, June, August, and September) met or exceeded the 99.9% SLA target.
+
+Under Clause 4.2, the service credit rate is 5% of the monthly fee (Rs 2,00,000) for each month uptime falls below SLA, i.e., Rs 10,000 per missed month. With two months of non-compliance (May and July 2026), the total service credit owed is:
+
+2 months x Rs 10,000 = Rs 20,000
+
+We will apply this credit against the next invoice cycle and request Acme's confirmation of the amount. Please let us know if you would like this credit invoiced separately or adjusted against the upcoming payment.
+
+Nimbus Retail Procurement
