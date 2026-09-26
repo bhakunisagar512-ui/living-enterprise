@@ -1,0 +1,12 @@
+# secrets - never commit
+.env
+*.key
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# machine-specific cache (last known exchange rate)
+cache/
