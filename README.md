@@ -4,7 +4,7 @@
 
 Built solo for **Escape Velocity 1.0 — AI Hackathon**, problem statement **P-03: Multi-Agent Systems — Systems That Plan, Delegate and Recover**.
 
-> Four AI agents take a real business request from intake to a ready-to-send reply. They plan their own work, call a live external API, check each other's output, recover when a step fails, and stop to ask a human whenever it matters. Every step is written to an audit trace.
+> Four AI agents take a real business request from intake to a ready-to-send reply. They plan their own work, call a live external API, check each other's output, recover when a step fails, stay inside a cost and time budget, and stop to ask a human whenever it matters. Every step is written to an audit trace, and the whole run can be watched and controlled from a web page.
 
 ---
 
@@ -96,13 +96,29 @@ python main.py compare --chaos-partial   # primary fails → backup API recovers
 
 Critical checks are **enforced in code, not left to the AI**. For example, the Retriever must end every answer with a `MISSING:` line, and if the currency tool failed, the system escalates even when the AI claims nothing is missing.
 
-### Stopping conditions
+### When the AI provider itself fails
 
-- At most **14 agent calls** per run, then a clean stop
-- At most **2 drafts** rejected before a human decides
-- At most **5 plan steps**
-- **4-second timeout** and **2 tries** per API
-- **Safe default:** if no answer is given at Final Review, the result is *Disapprove*. Nothing is ever sent by default.
+| Problem | What happens |
+|---|---|
+| Rate limited (429) · overloaded (529) · server error | ⚠ wait 5s and retry once, then stop cleanly |
+| An AI call hangs | abandoned after the per-call timeout (120s), retried once, then 🚩 |
+| Usage limit reached · invalid API key | stop cleanly with a plain-English reason, never a raw crash |
+
+### Stopping conditions and budgets
+
+| Limit | Default | At 80% | At 100% |
+|---|---|---|---|
+| **Cost** (real token usage × model price, in rupees) | Rs 40 | ⚠ warning | 🚩 raise by Rs 10, or stop |
+| **System time** (time spent waiting for the human is not counted) | 300s | ⚠ warning | 🚩 add 2 minutes, or stop |
+| Agent calls | 14 | | clean stop |
+| Rejected drafts before a human decides | 2 | | 🚩 |
+| Plan steps | 5 | | plan trimmed, ⚠ |
+| Per AI call | 120s | | retry once, then 🚩 |
+| Per exchange-rate API call | 4s, 2 tries | | next API, then cache, then 🚩 |
+
+Budgets are checked **before** every AI call, so no money is spent past the limit without a person agreeing. Prices: Claude Sonnet 5 $2 / $10 and Haiku 4.5 $1 / $5 per million input / output tokens.
+
+**Safe default:** if no answer is given at Final Review, the result is *Disapprove*. Nothing is ever sent by default.
 
 ---
 
@@ -121,6 +137,21 @@ Nothing leaves the system without a person seeing it. The **Final Review** scree
 Then: **[1] Approve** (saved to `outbox/`) · **[2] Send back** with instructions (rewritten and re-checked) · **[3] Disapprove** with a reason.
 
 Human instructions are passed to both the Executor and the Validator as trusted context.
+
+---
+
+## Web UI
+
+`python app.py` opens the control room in your browser:
+
+- **Pick a request**, choose whether the exchange-rate API is working, partly down or fully down, and set the cost and time budgets
+- **Watch it live:** each agent lights up as it works, the cost / time / call meters fill, and every step, API attempt and warning streams into the audit trail
+- **The plan** shows each step, the agent assigned, and *why*
+- **Escalations** open as a red card with the reason and the choices (retry with instructions, accept, raise the budget, abort)
+- **Final Review:** Validator checklist, warnings, cost, the internal note, and the exact message. **Approve stays locked until you tick every approval only a person can give** (e.g. Finance Director sign-off). Send back requires instructions; Disapprove records a reason
+- **Past runs:** open any saved trace and replay its full audit trail
+
+The page is plain HTML, CSS and JavaScript (no build step, no external libraries), served by a small FastAPI server that streams events with Server-Sent Events. Refreshing the page mid-run reconnects and restores any decision that is waiting for you. The terminal version (`python main.py …`) works exactly the same and is kept as a fallback.
 
 ---
 
@@ -143,12 +174,12 @@ Every run writes `runs/trace_<request>_<time>.json`, including runs that were st
 | Task that genuinely needs more than one agent, each justified | Four agents with separate jobs (see the agents table) |
 | Real planning and delegation, not a hardcoded chain | The Planner writes a different plan per request, using only agents and tools that exist |
 | At least one real external tool or API, handling its actual response shapes | Live exchange-rate API; two providers with different JSON formats, both validated |
-| Survive a failed, slow or malformed step | Timeout → retry → backup API → cached rate → escalate. Malformed agent output is retried too |
+| Survive a failed, slow or malformed step | At every layer: exchange-rate API (timeout → retry → backup API → cached rate → escalate) and AI provider (retry temporary errors, time out hung calls, repair malformed JSON, stop cleanly on permanent errors) |
 | Readable trace: which agent, which inputs, and why | JSON trace per run |
-| Enforce a stopping condition | Agent-call limit, draft limit, plan-step limit, API timeout |
-| Human approval for irreversible or sensitive actions | Final Review before anything is sent; escalations for anything the system can't resolve |
+| Enforce a stopping condition | Cost budget (rupees), time budget, agent-call limit, draft limit, plan-step limit, per-call timeouts |
+| Human approval for irreversible or sensitive actions | Final Review before anything is sent, with required approvals as tick-boxes; escalations for anything the system can't resolve |
 
-**Advanced directions covered:** a critic that really rejects work · shared memory between agents · choosing *not* to call a tool (no API call when everything is already in rupees) · retry and fallback strategies · tokens, API calls and time measured per run.
+**Advanced directions covered:** a critic that really rejects work · shared memory between agents · choosing *not* to call a tool · retry and fallback strategies · **cost, tokens, API calls and time measured per run, not estimated**.
 
 ---
 
@@ -165,6 +196,9 @@ These happened in real runs with Claude during development:
 | Stage 2 | The human spotted that the 7% counter itself needs Finance Director approval (Rule 2), used **Send back**, and the fix was re-validated | Human judgment catches what the AI missed |
 | Stage 2 | Globex request with no contract on file: stopped with 🚩 **before** anything was drafted | Doesn't guess when data is missing |
 | Stage 3 | Live API: `1 USD = 95.82 INR (rates dated 2026-09-25, 134 ms)`, and the competitor comparison changed accordingly | A real external tool changing a real answer |
+| Stage 3 | Chaos mode: HTTP 500, timeout, garbage HTML and an impossible rate were all rejected; the saved rate was used and every figure marked *indicative*. In the same run the Validator caught a false claim that a 7% price "undercuts both competitors" | Recovery at two layers in one run |
+| Stage 4 | A **real** failure: the Anthropic account hit its spend limit mid-development. The run stopped and the trace was saved; the error is now reported in plain English | Real-world failure, handled |
+| Stage 4 | Budget Rs 3: ⚠ at 80% (Rs 2.52), 🚩 at Rs 4.86 **before** the next AI call; a full run costs about Rs 7–15 | Measured cost, enforced budget |
 
 ---
 
@@ -181,6 +215,14 @@ setx ANTHROPIC_API_KEY "sk-ant-..."      # then open a new terminal
 export ANTHROPIC_API_KEY="sk-ant-..."
 ```
 
+**Web UI (recommended):**
+
+```bash
+python app.py              # opens http://127.0.0.1:8000
+```
+
+**Terminal:**
+
 ```bash
 python main.py renewal     # vendor asks for +12%: counter-offer at 7% + claim SLA credits
 python main.py dispute     # duplicate invoice: dispute it
@@ -190,11 +232,15 @@ python main.py unknown     # vendor with no contract on file: 🚩 escalates
 
 python main.py compare --chaos           # all currency APIs fail
 python main.py compare --chaos-partial   # primary currency API fails
+
+python main.py renewal --budget 3        # hits the cost budget mid-run
+python main.py renewal --time-limit 30   # hits the time budget
+python main.py renewal --agent-timeout 5 # AI calls time out and are retried
 ```
 
 Run `compare` once without chaos first, so a last known good rate is cached for the chaos demo.
 
-A typical run uses 4–7 agent calls, about 20,000–55,000 tokens, and 30–90 seconds of system time.
+A typical run uses 4–7 agent calls, about 20,000–55,000 tokens, **Rs 7–15**, and 30–90 seconds of system time.
 
 ---
 
@@ -202,7 +248,9 @@ A typical run uses 4–7 agent calls, about 20,000–55,000 tokens, and 30–90 
 
 ```
 .
-├── main.py                  the system (latest stage)
+├── main.py                  the system: agents, tools, recovery, budgets (latest stage)
+├── app.py                   web server for the UI
+├── static/index.html        the web UI (plain HTML/CSS/JS)
 ├── data/                    company documents the agents read
 │   ├── contract.txt         Acme master services agreement
 │   ├── policy.txt           procurement policy (Rules 1-5)
@@ -212,7 +260,9 @@ A typical run uses 4–7 agent calls, about 20,000–55,000 tokens, and 30–90 
 ├── stages/                  a runnable snapshot of each build stage
 │   ├── stage-1/
 │   ├── stage-2/
-│   └── stage-3/
+│   ├── stage-3/
+│   ├── stage-4/
+│   └── stage-5/
 ├── docs/                    design document (PDF)
 ├── runs/                    trace files (created when you run it)
 ├── outbox/                  approved outputs (created when you run it)
@@ -230,11 +280,11 @@ The project was built in stages, each tested with real Claude runs before moving
 | **1 · The team** | Four agents in a fixed order, document tools | Agents work together, but the Validator's rejection led nowhere: a "hardcoded chain" |
 | **2 · A real system** | Planner-driven plans · SLA calculator · reject-and-fix loop · ⚠ / 🚩 flags · Final Review · internal-note split · trace file · outbox · step limit | Plans adapt, the critic rejects, humans decide, everything is logged |
 | **3 · Real API + recovery** | Live currency API · backup API · cached fallback · response validation · chaos mode · parallel-safe rate sharing | Survives failed, slow and malformed API responses |
+| **4 · Budgets** | Cost budget in rupees from real token usage · time budget · 80% warnings · per-call AI timeout · AI provider error handling | Every stopping condition P-03 lists, enforced before money is spent |
+| **5 · Web UI** | FastAPI + plain HTML/CSS/JS · live event stream · escalation and Final Review in the browser · required-approval tick-boxes · past-run viewer | The whole system can be watched and controlled from one page |
 
 ### Planned next
 
-- **Stage 4:** time and cost budgets per run (in rupees), alongside the step limit
-- **Stage 5:** a readable HTML trace report
 - **Stage 6:** a 5-run reliability test (completion rate), demo script, pitch
 
 ---

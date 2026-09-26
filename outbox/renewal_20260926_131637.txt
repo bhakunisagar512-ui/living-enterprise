@@ -1,0 +1,20 @@
+Dear Acme Cloud Services Team,
+
+Thank you for your email regarding the renewal of our Master Services Agreement ahead of its expiry on 31 October 2026. We value our ongoing partnership and are supportive of renewing for a further 12-month term as provided for under Clause 8.1.
+
+However, we are unable to accept the proposed 12% price increase. Under Clause 8.2 of our agreement, renewal price increases are capped at 7% unless both parties agree otherwise in writing. A 12% increase falls outside this cap and outside what our internal approval policy permits for vendor renewals, which does not allow increases above 10% to be accepted as presented; such increases must instead be negotiated down or opened to competitive bidding.
+
+Separately, we note that under Clause 4.1 your service carries a guaranteed 99.9% monthly uptime commitment, with a 5% service credit per month applying under Clause 4.2 whenever this threshold is not met. Our records show uptime fell below this threshold in May (99.42%) and July (99.61%), giving rise to service credits of Rs 10,000 for each of those two months, a total of Rs 20,000, which has not yet been credited to our account. We would ask that this amount be applied against our renewal invoicing.
+
+Taking all of this into account, we propose the following renewal terms for the 12-month period following 31 October 2026:
+
+- A renewal price increase capped at 7%, in line with Clause 8.2, bringing the annual fee to Rs 25,68,000 (Rs 24,00,000 × 1.07), equivalent to Rs 2,14,000 per month.
+- Application of the outstanding Rs 20,000 in service credits owed under Clause 4.2 against the first invoice under the renewed term.
+- Continuation of the existing 99.9% uptime SLA and associated service credit terms under Clauses 4.1 and 4.2 without modification.
+
+We are keen to finalise renewal on these terms and would appreciate your written confirmation at your earliest convenience so that we can proceed without disruption to service continuity.
+
+We look forward to your response.
+
+Kind regards,
+Nimbus Retail Procurement

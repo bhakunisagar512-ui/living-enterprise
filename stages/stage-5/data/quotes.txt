@@ -1,0 +1,6 @@
+COMPETITOR QUOTES - CLOUD HOSTING AND 24x7 SUPPORT (received September 2026)
+
+Quote Q-01 | Zenith Cloud Pte Ltd (Singapore) | USD 2,200 per month | Uptime SLA 99.95% | 12-month term
+Quote Q-02 | Orbit Hosting Inc (USA)          | USD 2,250 per month | Uptime SLA 99.9%  | 12-month term
+
+Note: Both quotes are in US dollars. Convert at the current exchange rate before comparing with Acme (Rs 2,00,000 per month, see spend.txt).
